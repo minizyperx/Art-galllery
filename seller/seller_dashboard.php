@@ -191,6 +191,7 @@ $conn->close();
                 <table>
                     <thead>
                         <tr>
+                            
                             <th>ID</th>
                             <th>Title</th>
                             <th>Image</th>
