@@ -118,14 +118,15 @@ foreach ($sculptures as $sculpture) {
                             <h3 class="text-xl font-semibold mb-2"><?php echo htmlspecialchars($sculpture['title']); ?></h3>
 
                             <!-- Sculpture Details -->
-                            <p class="text-gray-600">Artist: <?php echo htmlspecialchars($sculpture['artist']); ?></p>
-                            <p class="text-gray-600"><?php echo htmlspecialchars($sculpture['description']); ?></p>
-                            <p class="text-gray-600">Created At: <?php echo htmlspecialchars($sculpture['created_at']); ?></p>
+                            
+                            <p class="text-gray-600">Year: <?php echo htmlspecialchars($sculpture['sculpture_year']); ?></p>
+                            <p class="text-gray-600">Cost: <?php echo htmlspecialchars($sculpture['sculpture_cost']); ?></p>
 
                             <!-- Display Highest Bid -->
                             <?php if ($highestBid): ?>
-                                <p class="text-gray-600"><span class="font-medium">Highest Bid:</span> <span class="text-green-600 font-semibold">$<?php echo htmlspecialchars($highestBid['bid_amount']); ?></span> by <span class="text-blue-600 font-semibold"><?php echo htmlspecialchars($highestBid['username']); ?></span></p>
+                                <p class="text-gray-600"><span class="font-medium">Highest Bid:</span> <span class="text-green-600 font-semibold">Rs:<?php echo htmlspecialchars($highestBid['bid_amount']); ?></span> by <span class="text-blue-600 font-semibold"><?php echo htmlspecialchars($highestBid['username']); ?></span></p>
                             <?php endif; ?>
+                            <p class="text-gray-600"><b>Status:</b> <?php echo htmlspecialchars($sculpture['status']); ?></p>
 
                             <!-- Countdown Timer or Sold Out -->
                             <?php if ($isSoldOut): ?>

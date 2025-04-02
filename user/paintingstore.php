@@ -85,7 +85,7 @@ foreach ($paintings as $painting) {
             </div>
             <nav>
                 <ul class="flex space-x-4">
-                    <li><a href="#" class="hover:text-gray-400">Home</a></li>
+                    <li><a href="../index.php" class="hover:text-gray-400">Home</a></li>
                     <li><a href="#" class="hover:text-gray-400">Gallery</a></li>
                     <li><a href="#" class="hover:text-gray-400">About</a></li>
                     <li><a href="#" class="hover:text-gray-400">Contact</a></li>

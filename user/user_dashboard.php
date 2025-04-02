@@ -53,9 +53,7 @@ $sculptures = $result2->num_rows > 0 ? $result2->fetch_all(MYSQLI_ASSOC) : [];
         </div>
         <nav>
             <ul class="flex space-x-4">
-                <li><a href="#" class="hover:text-gray-400">Home</a></li>
-                <li><a href="#" class="hover:text-gray-400">Explore</a></li>
-                <li><a href="#" class="hover:text-gray-400">Profile</a></li>
+                
                 <li><a href="logout.php" class="hover:text-gray-400">Logout</a></li>
             </ul>
         </nav>

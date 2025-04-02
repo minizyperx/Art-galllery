@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 $host = "localhost";
@@ -32,6 +31,7 @@ if ($paintingsResult->num_rows > 0) {
         $paintings[] = $row;
     }
 }
+$paintingsStmt->close();
 
 // Fetch sculptures for the logged-in seller
 $sculptures = [];
@@ -45,6 +45,7 @@ if ($sculpturesResult->num_rows > 0) {
         $sculptures[] = $row;
     }
 }
+$sculpturesStmt->close();
 
 $conn->close();
 ?>
@@ -132,6 +133,18 @@ $conn->close();
             color: #888;
             font-style: italic;
         }
+        .status-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .status-active {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-sold {
+            color: #dc3545;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -172,9 +185,11 @@ $conn->close();
                             <td><img src="../<?php echo htmlspecialchars($painting['painting_image']); ?>" alt="<?php echo htmlspecialchars($painting['painting_title']); ?>"></td>
                             <td><?php echo htmlspecialchars($painting['start_date']); ?></td>
                             <td><?php echo htmlspecialchars($painting['painting_year']); ?></td>
-                            <td><?php echo htmlspecialchars($painting['painting_cost']); ?></td>
+                            <td>$<?php echo number_format($painting['painting_cost'], 2); ?></td>
                             <td><?php echo htmlspecialchars($painting['end_date']); ?></td>
-                            <td><?php echo htmlspecialchars($painting['status']); ?></td>
+                            <td class="status-<?php echo strtolower(htmlspecialchars($painting['status'])); ?>">
+                                <?php echo htmlspecialchars($painting['status']); ?>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -191,11 +206,15 @@ $conn->close();
                 <table>
                     <thead>
                         <tr>
-                            
                             <th>ID</th>
                             <th>Title</th>
                             <th>Image</th>
-                            <th>Created At</th>
+                            <th>Start Date</th>
+                            <th>Year</th>
+                            <th>Cost</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                
                         </tr>
                     </thead>
                     <tbody>
@@ -204,8 +223,14 @@ $conn->close();
                             <td><?php echo htmlspecialchars($sculpture['id']); ?></td>
                             <td><?php echo htmlspecialchars($sculpture['title']); ?></td>
                             <td><img src="../<?php echo htmlspecialchars($sculpture['image_url']); ?>" alt="<?php echo htmlspecialchars($sculpture['title']); ?>"></td>
-                            
-                            <td><?php echo htmlspecialchars($sculpture['created_at']); ?></td>
+                            <td><?php echo htmlspecialchars($sculpture['start_date']); ?></td>
+                            <td><?php echo htmlspecialchars($sculpture['sculpture_year']); ?></td>
+                            <td>$<?php echo number_format($sculpture['sculpture_cost'], 2); ?></td>
+                            <td><?php echo htmlspecialchars($sculpture['end_date']); ?></td>
+                            <td class="status-<?php echo strtolower(htmlspecialchars($sculpture['status'])); ?>">
+                                <?php echo htmlspecialchars($sculpture['status']); ?>
+                            </td>
+                        
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
