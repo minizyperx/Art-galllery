@@ -1,83 +1,430 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - CUSAT Art Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        :root {
+            --primary-color: #3a0ca3;
+            --secondary-color: #7209b7;
+            --accent-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --text-color: #495057;
+            --gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            color: #333;
-            text-align: center;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.7;
         }
 
         .navbar {
-            background-color: #0d0767;
-            padding: 10px 0;
+            background: var(--gradient);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .navbar a {
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links a {
             color: white;
             text-decoration: none;
-            padding: 10px 20px;
-            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            margin: 0 0.2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
-        .navbar a:hover {
-            background-color: #575fcf;
-            border-radius: 5px;
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background-color: var(--accent-color);
+        }
+
+        .hero {
+            height: 300px;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1578926375605-eaf7559b1458?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1386&q=80') center/cover;
+            opacity: 0.15;
+        }
+
+        .hero-content {
+            z-index: 1;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
 
         .container {
-            max-width: 800px;
-            margin: 50px auto;
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .about-section {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        h1 {
-            color: #0d0767;
-            margin-bottom: 20px;
+        .about-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--gradient);
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.3;
         }
 
-        p {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #555;
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
         }
 
         .highlight {
-            color: #0d0767;
-            font-weight: bold;
+            color: var(--primary-color);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-color);
+            opacity: 0.3;
+        }
+
+        .mission-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .mission-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid var(--accent-color);
+        }
+
+        .mission-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .mission-card i {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .mission-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-color);
+            font-size: 1.1rem;
         }
 
         .footer {
-            margin-top: 50px;
-            padding: 20px;
-            background-color: #0d0767;
+            background: var(--dark-color);
             color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .footer-column h3 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-column p {
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+            }
+
+            .logo {
+                margin-bottom: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .about-section {
+                padding: 2rem 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="index.php">Home</a>
-        <a href="user/userlogin.php">Login</a>
-        <a href="user/user_register.php">Register</a>
-        <a href="user/about.html">About</a>
-        <a href="user/contact.php">Contact</a>
-    </div>
-    
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.php" class="logo">
+                <i class="fas fa-palette"></i> CUSAT Art Gallery
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="user/userlogin.php">Login</a></li>
+                <li><a href="user/user_register.php">Register</a></li>
+                <li><a href="user/about.html" class="active">About</a></li>
+                <li><a href="user/contact.php">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Our Artistic Journey</h1>
+            <p>Discover the story behind CUSAT Art Gallery and our passion for connecting artists with art lovers</p>
+        </div>
+    </section>
+
     <div class="container">
-        <h1>About CUSAT Art Gallery</h1>
-        <p>Welcome to <span class="highlight">CUSAT Art Gallery</span>, a premier online platform dedicated to showcasing artistic expressions from talented creators. Our platform enables artists to display and sell their masterpieces while allowing art enthusiasts to explore and acquire unique paintings and sculptures.</p>
-        <p>Our mission is to bridge the gap between artists and collectors by providing a seamless, engaging, and secure art marketplace. Whether you're an artist looking to gain exposure or a collector searching for inspiration, we bring art to your fingertips.</p>
-        <p>Join us in celebrating creativity and supporting the art community!</p>
+        <section class="about-section">
+            <h2 class="section-title">About CUSAT Art Gallery</h2>
+            <p>Welcome to <span class="highlight">CUSAT Art Gallery</span>, a premier online platform dedicated to showcasing artistic expressions from talented creators across the globe. Our digital gallery serves as a vibrant ecosystem where emerging and established artists can display and sell their masterpieces while allowing art enthusiasts to explore and acquire unique paintings, sculptures, and digital art.</p>
+            
+            <p>Founded in 2023, we've grown from a small university project to one of the most visited online art platforms in the region. Our carefully curated collections represent diverse styles, mediums, and cultural perspectives, ensuring there's something for every art lover.</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Featured Artists</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Artworks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Customer Satisfaction</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+            </div>
+            
+            <p>Our mission is to bridge the gap between artists and collectors by providing a seamless, engaging, and secure art marketplace. Whether you're an artist looking to gain exposure or a collector searching for inspiration, we bring art to your fingertips with just a click.</p>
+        </section>
+
+        <section class="mission-cards">
+            <div class="mission-card">
+                <i class="fas fa-brush"></i>
+                <h3>Artist Empowerment</h3>
+                <p>We provide artists with tools and exposure to grow their careers, offering fair commission rates and promotional support.</p>
+            </div>
+            <div class="mission-card">
+                <i class="fas fa-search"></i>
+                <h3>Art Discovery</h3>
+                <p>Our intelligent recommendation system helps collectors discover artworks that resonate with their personal taste.</p>
+            </div>
+            <div class="mission-card">
+                <i class="fas fa-handshake"></i>
+                <h3>Community Building</h3>
+                <p>We foster connections through virtual exhibitions, artist talks, and collector events throughout the year.</p>
+            </div>
+        </section>
     </div>
 
-    <div class="footer">
-        &copy; 2025 CUSAT Art Gallery | Designed with love for art lovers.
-    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About Us</h3>
+                <p>CUSAT Art Gallery is dedicated to making art accessible to everyone while supporting artists in their creative journey.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <p><a href="index.php" style="color: white; text-decoration: none;">Home</a></p>
+                <p><a href="user/userlogin.php" style="color: white; text-decoration: none;">Login</a></p>
+                <p><a href="user/user_register.php" style="color: white; text-decoration: none;">Register</a></p>
+                <p><a href="user/contact.php" style="color: white; text-decoration: none;">Contact</a></p>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> CUSAT, Kochi, Kerala</p>
+                <p><i class="fas fa-phone"></i> +91 9876543210</p>
+                <p><i class="fas fa-envelope"></i> info@cusatartgallery.com</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 CUSAT Art Gallery | Designed with <i class="fas fa-heart" style="color: var(--accent-color);"></i> for art lovers.
+        </div>
+    </footer>
 </body>
 </html>
