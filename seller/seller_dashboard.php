@@ -1,20 +1,11 @@
 <?php
 session_start();
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "art_gallery";
-
-$conn = new mysqli($host, $user, $pass, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+include '../db/connect.php';
 
 // Check if the seller is logged in
 if (!isset($_SESSION['seller_id'])) {
-    die("You must be logged in to view this page.");
+    header("Location: seller_login.php");
+    exit();
 }
 
 $seller_id = $_SESSION['seller_id'];
@@ -46,8 +37,6 @@ if ($sculpturesResult->num_rows > 0) {
     }
 }
 $sculpturesStmt->close();
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -56,186 +45,150 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            color: #333;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1 {
-            text-align: center;
-            color: #555;
-        }
-        .button-group {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .button-group button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .button-group button:hover {
-            background-color: #0056b3;
-        }
-        .section {
-            margin-bottom: 40px;
-        }
-        .section h2 {
-            color: #007bff;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        img {
-            max-width: 100px;
-            height: auto;
-            border-radius: 5px;
-        }
-        .no-data {
-            text-align: center;
-            color: #888;
-            font-style: italic;
-        }
         .status-pending {
-            color: #ffc107;
+            color: #f39c12;
             font-weight: bold;
         }
         .status-active {
-            color: #28a745;
+            color: #2ecc71;
             font-weight: bold;
         }
         .status-sold {
-            color: #dc3545;
+            color: #e74c3c;
             font-weight: bold;
+        }
+        .artwork-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 0.5rem;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Seller Dashboard</h1>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Seller Dashboard</h1>
 
-        <!-- Button Group -->
-        <div class="button-group">
-            <button onclick="window.location.href='../painting.php'">Add Painting</button>
-            <button onclick="window.location.href='../sculpture.php'">Add Sculpture</button>
-            <button onclick="window.location.href='seller_logout.php'">Logout</button>
-        </div>
+            <!-- Welcome Message -->
+            <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                <h2 class="text-xl font-semibold text-blue-800">Welcome, <?php echo htmlspecialchars($_SESSION['seller_name'] ?? 'Seller'); ?>!</h2>
+                <p class="text-blue-600">Here you can manage your artworks and track their status.</p>
+            </div>
 
-        <!-- Paintings Section -->
-        <div class="section">
-            <h2>Paintings</h2>
-            <?php if (empty($paintings)): ?>
-                <p class="no-data">No paintings found.</p>
-            <?php else: ?>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Image</th>
-                            <th>Start Date</th>
-                            <th>Year</th>
-                            <th>Cost</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($paintings as $painting): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($painting['id']); ?></td>
-                            <td><?php echo htmlspecialchars($painting['painting_title']); ?></td>
-                            <td><img src="../<?php echo htmlspecialchars($painting['painting_image']); ?>" alt="<?php echo htmlspecialchars($painting['painting_title']); ?>"></td>
-                            <td><?php echo htmlspecialchars($painting['start_date']); ?></td>
-                            <td><?php echo htmlspecialchars($painting['painting_year']); ?></td>
-                            <td>$<?php echo number_format($painting['painting_cost'], 2); ?></td>
-                            <td><?php echo htmlspecialchars($painting['end_date']); ?></td>
-                            <td class="status-<?php echo strtolower(htmlspecialchars($painting['status'])); ?>">
-                                <?php echo htmlspecialchars($painting['status']); ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endif; ?>
-        </div>
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <a href="../painting.php" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition duration-300 flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Add Painting
+                </a>
+                <a href="../sculpture.php" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition duration-300 flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Add Sculpture
+                </a>
+                <a href="seller_logout.php" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition duration-300 flex items-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+            </div>
 
-        <!-- Sculptures Section -->
-        <div class="section">
-            <h2>Sculptures</h2>
-            <?php if (empty($sculptures)): ?>
-                <p class="no-data">No sculptures found.</p>
-            <?php else: ?>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Image</th>
-                            <th>Start Date</th>
-                            <th>Year</th>
-                            <th>Cost</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($sculptures as $sculpture): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($sculpture['id']); ?></td>
-                            <td><?php echo htmlspecialchars($sculpture['title']); ?></td>
-                            <td><img src="../<?php echo htmlspecialchars($sculpture['image_url']); ?>" alt="<?php echo htmlspecialchars($sculpture['title']); ?>"></td>
-                            <td><?php echo htmlspecialchars($sculpture['start_date']); ?></td>
-                            <td><?php echo htmlspecialchars($sculpture['sculpture_year']); ?></td>
-                            <td>$<?php echo number_format($sculpture['sculpture_cost'], 2); ?></td>
-                            <td><?php echo htmlspecialchars($sculpture['end_date']); ?></td>
-                            <td class="status-<?php echo strtolower(htmlspecialchars($sculpture['status'])); ?>">
-                                <?php echo htmlspecialchars($sculpture['status']); ?>
-                            </td>
-                        
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endif; ?>
+            <!-- Paintings Section -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4 border-b pb-2">Your Paintings</h2>
+                <?php if (empty($paintings)): ?>
+                    <div class="text-center py-8 bg-gray-50 rounded-lg">
+                        <i class="fas fa-paint-brush text-4xl text-gray-400 mb-3"></i>
+                        <p class="text-gray-600">You haven't uploaded any paintings yet.</p>
+                        <a href="../painting.php" class="text-blue-500 hover:underline mt-2 inline-block">Add your first painting</a>
+                    </div>
+                <?php else: ?>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                            <thead class="bg-gray-800 text-white">
+                                <tr>
+                                    <th class="py-3 px-4 text-left">ID</th>
+                                    <th class="py-3 px-4 text-left">Title</th>
+                                    <th class="py-3 px-4 text-left">Image</th>
+                                    <th class="py-3 px-4 text-left">Year</th>
+                                    <th class="py-3 px-4 text-left">Cost (Rs)</th>
+                                    <th class="py-3 px-4 text-left">Start Date</th>
+                                    <th class="py-3 px-4 text-left">End Date</th>
+                                    <th class="py-3 px-4 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <?php foreach ($paintings as $painting): ?>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-4 px-4"><?php echo htmlspecialchars($painting['id']); ?></td>
+                                    <td class="py-4 px-4 font-medium"><?php echo htmlspecialchars($painting['painting_title']); ?></td>
+                                    <td class="py-4 px-4">
+                                        <img src="../<?php echo htmlspecialchars($painting['painting_image']); ?>" 
+                                             alt="<?php echo htmlspecialchars($painting['painting_title']); ?>" 
+                                             class="artwork-image">
+                                    </td>
+                                    <td class="py-4 px-4"><?php echo htmlspecialchars($painting['painting_year']); ?></td>
+                                    <td class="py-4 px-4"><?php echo number_format($painting['painting_cost'], 2); ?></td>
+                                    <td class="py-4 px-4"><?php echo date('M d, Y', strtotime($painting['start_date'])); ?></td>
+                                    <td class="py-4 px-4"><?php echo date('M d, Y', strtotime($painting['end_date'])); ?></td>
+                                    <td class="py-4 px-4 status-<?php echo strtolower(htmlspecialchars($painting['status'])); ?>">
+                                        <?php echo htmlspecialchars($painting['status']); ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Sculptures Section -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4 border-b pb-2">Your Sculptures</h2>
+                <?php if (empty($sculptures)): ?>
+                    <div class="text-center py-8 bg-gray-50 rounded-lg">
+                        <i class="fas fa-monument text-4xl text-gray-400 mb-3"></i>
+                        <p class="text-gray-600">You haven't uploaded any sculptures yet.</p>
+                        <a href="../sculpture.php" class="text-blue-500 hover:underline mt-2 inline-block">Add your first sculpture</a>
+                    </div>
+                <?php else: ?>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                            <thead class="bg-gray-800 text-white">
+                                <tr>
+                                    <th class="py-3 px-4 text-left">ID</th>
+                                    <th class="py-3 px-4 text-left">Title</th>
+                                    <th class="py-3 px-4 text-left">Image</th>
+                                    <th class="py-3 px-4 text-left">Year</th>
+                                    <th class="py-3 px-4 text-left">Cost (Rs)</th>
+                                    <th class="py-3 px-4 text-left">Start Date</th>
+                                    <th class="py-3 px-4 text-left">End Date</th>
+                                    <th class="py-3 px-4 text-left">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <?php foreach ($sculptures as $sculpture): ?>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-4 px-4"><?php echo htmlspecialchars($sculpture['id']); ?></td>
+                                    <td class="py-4 px-4 font-medium"><?php echo htmlspecialchars($sculpture['title']); ?></td>
+                                    <td class="py-4 px-4">
+                                        <img src="../<?php echo htmlspecialchars($sculpture['image_url']); ?>" 
+                                             alt="<?php echo htmlspecialchars($sculpture['title']); ?>" 
+                                             class="artwork-image">
+                                    </td>
+                                    <td class="py-4 px-4"><?php echo htmlspecialchars($sculpture['sculpture_year']); ?></td>
+                                    <td class="py-4 px-4"><?php echo number_format($sculpture['sculpture_cost'], 2); ?></td>
+                                    <td class="py-4 px-4"><?php echo date('M d, Y', strtotime($sculpture['start_date'])); ?></td>
+                                    <td class="py-4 px-4"><?php echo date('M d, Y', strtotime($sculpture['end_date'])); ?></td>
+                                    <td class="py-4 px-4 status-<?php echo strtolower(htmlspecialchars($sculpture['status'])); ?>">
+                                        <?php echo htmlspecialchars($sculpture['status']); ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </body>

@@ -109,6 +109,8 @@ $conn->close();
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            margin: 0;
+            position: relative;
         }
 
         .container {
@@ -117,11 +119,13 @@ $conn->close();
             border-radius: 10px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
             width: 400px;
+            position: relative;
         }
 
         h1 {
             text-align: center;
             color: #6d4c41;
+            margin-top: 0;
         }
 
         .message {
@@ -144,6 +148,8 @@ $conn->close();
 
         label {
             font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
         }
 
         input, select {
@@ -152,9 +158,10 @@ $conn->close();
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
 
-        button {
+        button[type="submit"] {
             width: 100%;
             padding: 12px;
             background-color: #6d4c41;
@@ -163,14 +170,61 @@ $conn->close();
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-weight: bold;
         }
 
-        button:hover {
+        button[type="submit"]:hover {
             background-color: #5d4037;
         }
+
+        /* Right-most back button */
+        .right-back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #6d4c41;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+
+        .right-back-button:hover {
+            background-color: #5d4037;
+        }
+
+        .right-back-button i {
+            font-size: 18px;
+        }
+
+        .current-image {
+            margin: 10px 0;
+        }
+
+        .current-image img {
+            max-width: 100px;
+            max-height: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Right-most back button -->
+    <a href="javascript:history.back()" class="right-back-button">
+        <i class="fas fa-arrow-left"></i>
+        Back
+    </a>
+
     <div class="container">
         <h1><?= $edit_id ? "Edit" : "Upload" ?> Sculpture</h1>
 
@@ -187,26 +241,28 @@ $conn->close();
 
         <form action="" method="post" enctype="multipart/form-data">
             <label for="sculpture_title">Sculpture Title:</label>
-            <input type="text" id="sculpture_title" name="sculpture_title" required value="<?= $sculpture['title'] ?? '' ?>">
+            <input type="text" id="sculpture_title" name="sculpture_title" required value="<?= htmlspecialchars($sculpture['title'] ?? '') ?>">
 
             <label for="sculpture_image">Sculpture Image:</label>
             <input type="file" id="sculpture_image" name="sculpture_image">
             <?php if ($sculpture && $sculpture['image_url']) { ?>
-                <p>Current Image:</p>
-                <img src="<?= $sculpture['image_url'] ?>" width="100px">
+                <div class="current-image">
+                    <p>Current Image:</p>
+                    <img src="<?= htmlspecialchars($sculpture['image_url']) ?>" alt="Current sculpture image">
+                </div>
             <?php } ?>
 
             <label for="start_date">Bidding Start Date:</label>
-            <input type="date" id="start_date" name="start_date" required value="<?= $sculpture['start_date'] ?? '' ?>">
+            <input type="date" id="start_date" name="start_date" required value="<?= htmlspecialchars($sculpture['start_date'] ?? '') ?>">
 
             <label for="sculpture_year">Year of Creation:</label>
-            <input type="number" id="sculpture_year" name="sculpture_year" required value="<?= $sculpture['sculpture_year'] ?? '' ?>">
+            <input type="number" id="sculpture_year" name="sculpture_year" required value="<?= htmlspecialchars($sculpture['sculpture_year'] ?? '') ?>">
 
             <label for="sculpture_cost">Cost:</label>
-            <input type="number" id="sculpture_cost" name="sculpture_cost" required value="<?= $sculpture['sculpture_cost'] ?? '' ?>">
+            <input type="number" id="sculpture_cost" name="sculpture_cost" required value="<?= htmlspecialchars($sculpture['sculpture_cost'] ?? '') ?>">
 
             <label for="end_date">Bidding End Date:</label>
-            <input type="date" id="end_date" name="end_date" required value="<?= $sculpture['end_date'] ?? '' ?>">
+            <input type="date" id="end_date" name="end_date" required value="<?= htmlspecialchars($sculpture['end_date'] ?? '') ?>">
 
             <label for="status">Sculpture Status:</label>
             <select id="status" name="status">

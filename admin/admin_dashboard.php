@@ -148,7 +148,7 @@ $conn->close();
                             <td class="p-3 border"><?= htmlspecialchars($painting['id']) ?></td>
                             <td class="p-3 border"><?= htmlspecialchars($painting['painting_title']) ?></td>
                             <td class="p-3 border">
-                                <img src="<?= htmlspecialchars($painting['painting_image']) ?>" width="100" class="rounded-lg shadow">
+                                <img src="../<?= htmlspecialchars($painting['painting_image']) ?>" width="100" class="rounded-lg shadow">
                             </td>
                             <td class="p-3 border"><?= htmlspecialchars($painting['painting_year']) ?></td>
                             <td class="p-3 border">$<?= number_format(htmlspecialchars($painting['painting_cost']), 2) ?></td>

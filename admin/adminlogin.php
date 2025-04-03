@@ -72,10 +72,33 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #4f46e5;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .home-button:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+        }
+        .login-container {
+            position: relative;
+        }
+    </style>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-cover bg-center" style="background-image: url('../adminlogin.jpeg');">
 
-    <div class="bg-white p-10 shadow-xl rounded-lg w-full max-w-md">
+    <div class="login-container bg-white p-10 shadow-xl rounded-lg w-full max-w-md relative">
+        <!-- Home Button -->
+        <a href="../index.php" class="home-button">Home</a>
+
         <h1 class="text-3xl font-bold text-center text-pink-600 mb-6">Admin Login</h1>
 
         <form action="" method="post" class="space-y-4">

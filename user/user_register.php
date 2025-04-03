@@ -70,9 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <style>
         body {
             font-family: sans-serif;
-            background-image: url('../userregister.jpeg'); /* Set background image */
-            background-size: cover; /* Make sure the image covers the full page */
-            background-position: center; /* Center the background image */
+            background-image: url('../userregister.jpeg');
+            background-size: cover;
+            background-position: center;
             margin: 0;
             padding: 0;
             display: flex;
@@ -83,11 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for form */
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
             width: 400px;
+            position: relative;
         }
 
         h1 {
@@ -144,15 +145,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-decoration: underline;
         }
 
+        .home-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        .home-button:hover {
+            background-color: #45a049;
+        }
+
         @media (max-width: 450px) {
             .container {
                 width: 90%;
+            }
+            .home-button {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+                font-size: 12px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="../index.php" class="home-button">Home</a>
         <h1>Register</h1>
         <form action="" method="post">
             <label for="username">Username:</label>

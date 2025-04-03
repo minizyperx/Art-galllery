@@ -131,7 +131,7 @@ $conn->close();
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <?php foreach ($sculptures as $sculpture): ?>
                         <div class="art-card bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="../uploads/sculptures/<?php echo htmlspecialchars(basename($sculpture['image_url'])); ?>" 
+                            <img src="uploads/sculptures/<?php echo htmlspecialchars(basename($sculpture['image_url'])); ?>" 
                                  alt="<?php echo htmlspecialchars($sculpture['title']); ?>" 
                                  class="w-full h-48 object-cover">
                             <div class="p-4">

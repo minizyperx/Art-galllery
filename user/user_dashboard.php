@@ -10,12 +10,12 @@ if (isset($_GET['search'])) {
     $searchTerm = trim($_GET['search']); // Get the search term
 }
 
-// Fetch paintings data with search filter
-$sql = "SELECT * FROM paintings WHERE painting_title LIKE ? OR painting_year LIKE ? OR status LIKE ?";
+// Fetch latest 4 paintings data with search filter
+$sql = "SELECT * FROM paintings WHERE painting_title LIKE ? OR painting_year LIKE ? OR status LIKE ? ORDER BY painting_year DESC LIMIT 4";
 $stmt = $conn->prepare($sql);
 
-// Fetch sculptures data with search filter
-$sql2 = "SELECT * FROM sculptures WHERE title LIKE ? OR sculpture_year LIKE ? OR status LIKE ?";
+// Fetch latest 4 sculptures data with search filter
+$sql2 = "SELECT * FROM sculptures WHERE title LIKE ? OR sculpture_year LIKE ? OR status LIKE ? ORDER BY sculpture_year DESC LIMIT 4";
 $stmt2 = $conn->prepare($sql2);
 
 // Bind the search term to the queries
@@ -46,14 +46,13 @@ $sculptures = $result2->num_rows > 0 ? $result2->fetch_all(MYSQLI_ASSOC) : [];
     <!-- Header -->
     <header class="bg-gray-800 text-white p-4 flex justify-between items-center">
         <div class="logo">
-            <img src="logo.png" alt="Art Gallery Logo" class="h-12">
+            <img src="../artglr.jpeg" alt="Art Gallery Logo" class="h-12">
         </div>
         <div class="welcome-message">
             <h1 class="text-xl font-bold">Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? 'User'); ?>!</h1>
         </div>
         <nav>
             <ul class="flex space-x-4">
-                
                 <li><a href="logout.php" class="hover:text-gray-400">Logout</a></li>
             </ul>
         </nav>
@@ -84,18 +83,24 @@ $sculptures = $result2->num_rows > 0 ? $result2->fetch_all(MYSQLI_ASSOC) : [];
         <section class="text-center mb-8">
             <a href='paintingstore.php' id="paintingsBtn" class="bg-blue-500 text-white px-6 py-2 rounded-lg mr-4 hover:bg-blue-600">Paintings</a>
             <a href='sculpturestore.php' id="sculpturesBtn" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">Sculptures</a>
+            <a href="bids_page.php">
+    <a href='bids_page.php' style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
+        View Your Bids
+</a>
+</a>
+
         </section>
 
         <!-- Featured Paintings -->
         <section class="mb-8">
             <h2 class="text-2xl font-bold text-center mb-6">Featured Paintings</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <?php if (empty($paintings)): ?>
-                    <p class="text-center text-gray-600">No paintings found.</p>
+                    <p class="text-center text-gray-600 col-span-full">No paintings found.</p>
                 <?php else: ?>
                     <?php foreach ($paintings as $painting): ?>
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="<?php echo htmlspecialchars($painting['painting_image']); ?>" alt="<?php echo htmlspecialchars($painting['painting_title']); ?>" class="w-full h-48 object-cover">
+                            <img src="../<?php echo htmlspecialchars($painting['painting_image']); ?>" alt="<?php echo htmlspecialchars($painting['painting_title']); ?>" class="w-full h-48 object-cover">
                             <div class="p-4">
                                 <h3 class="text-xl font-semibold mb-2"><?php echo htmlspecialchars($painting['painting_title']); ?></h3>
                                 <p class="text-gray-600">Year: <?php echo htmlspecialchars($painting['painting_year']); ?></p>
@@ -106,14 +111,19 @@ $sculptures = $result2->num_rows > 0 ? $result2->fetch_all(MYSQLI_ASSOC) : [];
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
+            <?php if (!empty($paintings)): ?>
+                <div class="text-center mt-4">
+                    <a href="paintingstore.php" class="text-blue-500 hover:text-blue-700 font-medium">View All Paintings →</a>
+                </div>
+            <?php endif; ?>
         </section>
 
         <!-- Featured Sculptures -->
         <section class="mb-8">
             <h2 class="text-2xl font-bold text-center mb-6">Featured Sculptures</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <?php if (empty($sculptures)): ?>
-                    <p class="text-center text-gray-600">No sculptures found.</p>
+                    <p class="text-center text-gray-600 col-span-full">No sculptures found.</p>
                 <?php else: ?>
                     <?php foreach ($sculptures as $sculpture): ?>
                         <div class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -128,6 +138,11 @@ $sculptures = $result2->num_rows > 0 ? $result2->fetch_all(MYSQLI_ASSOC) : [];
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
+            <?php if (!empty($sculptures)): ?>
+                <div class="text-center mt-4">
+                    <a href="sculpturestore.php" class="text-blue-500 hover:text-blue-700 font-medium">View All Sculptures →</a>
+                </div>
+            <?php endif; ?>
         </section>
     </main>
 
