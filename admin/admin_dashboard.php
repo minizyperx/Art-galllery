@@ -60,163 +60,364 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard | CUSAT Art Gallery</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3a0ca3;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .status-active {
+            background-color: #e6f7ee;
+            color: #10b981;
+        }
+        
+        .status-sold {
+            background-color: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #f59e0b;
+        }
+        
+        .action-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 p-4 flex flex-col">
+        <div class="flex items-center justify-center mb-8">
+            <i class="fas fa-palette text-2xl mr-2 text-pink-400"></i>
+            <h1 class="text-xl font-bold">CUSAT Art Gallery</h1>
+        </div>
+        
+        <div class="flex-1">
+            <a href="#" class="sidebar-item active flex items-center p-3 rounded-lg mb-2">
+                <i class="fas fa-tachometer-alt mr-3"></i>
+                Dashboard
+            </a>
+            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
+                <i class="fas fa-users mr-3"></i>
+                Users
+            </a>
+            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
+                <i class="fas fa-envelope mr-3"></i>
+                Messages
+            </a>
+            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
+                <i class="fas fa-paint-brush mr-3"></i>
+                Paintings
+            </a>
+            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
+                <i class="fas fa-monument mr-3"></i>
+                Sculptures
+            </a>
+        </div>
+        
+        <div class="mt-auto">
+            <a href="adminlogout.php" class="flex items-center p-3 rounded-lg hover:bg-red-500 transition">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                Logout
+            </a>
+        </div>
+    </div>
 
-    <div class="max-w-6xl mx-auto my-10 p-6 bg-white shadow-lg rounded-lg">
-        <div class="flex justify-between items-center">
-            <h2 class="text-3xl font-bold text-blue-600">Admin Dashboard</h2>
-            <div class="space-x-2">
-                <a href="adminlogout.php" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition">Logout</a>
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto p-8">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800">Admin Dashboard</h2>
+            <div class="flex items-center">
+                <span class="mr-4 text-gray-600">Welcome, Admin</span>
+                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <i class="fas fa-user text-indigo-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="card p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
+                        <i class="fas fa-users text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Total Users</p>
+                        <h3 class="text-2xl font-bold"><?= $users->num_rows ?></h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                        <i class="fas fa-envelope text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Messages</p>
+                        <h3 class="text-2xl font-bold"><?= $messages->num_rows ?></h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                        <i class="fas fa-paint-brush text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Paintings</p>
+                        <h3 class="text-2xl font-bold"><?= $paintings->num_rows ?></h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-pink-100 text-pink-600 mr-4">
+                        <i class="fas fa-monument text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-500">Sculptures</p>
+                        <h3 class="text-2xl font-bold"><?= $sculptures->num_rows ?></h3>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Users Table -->
-        <h3 class="mt-6 text-xl font-semibold">Users</h3>
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-gray-300 shadow-md">
-                <thead class="bg-blue-500 text-white">
-                    <tr>
-                        <th class="p-3 border">ID</th>
-                        <th class="p-3 border">Name</th>
-                        <th class="p-3 border">Email</th>
-                        <th class="p-3 border">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($user = $users->fetch_assoc()): ?>
-                        <tr class="hover:bg-gray-100">
-                            <td class="p-3 border"><?= htmlspecialchars($user['id']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($user['username']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($user['email']) ?></td>
-                            <td class="p-3 border">
-                                <a class="text-red-600 hover:underline" href="?delete_user=<?= $user['id'] ?>" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-800">Users Management</h3>
+                
+            </div>
+            
+            <div class="table-container">
+                <table class="w-full">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="p-4 text-left">ID</th>
+                            <th class="p-4 text-left">Name</th>
+                            <th class="p-4 text-left">Email</th>
+                            <th class="p-4 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($user = $users->fetch_assoc()): ?>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="p-4"><?= htmlspecialchars($user['id']) ?></td>
+                            <td class="p-4 font-medium"><?= htmlspecialchars($user['username']) ?></td>
+                            <td class="p-4"><?= htmlspecialchars($user['email']) ?></td>
+                            <td class="p-4">
+                                <a href="?delete_user=<?= $user['id'] ?>" 
+                                   onclick="return confirm('Are you sure you want to delete this user?')"
+                                   class="text-red-500 action-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Contact Messages -->
-        <h3 class="mt-6 text-xl font-semibold">Contact Messages</h3>
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-gray-300 shadow-md">
-                <thead class="bg-blue-500 text-white">
-                    <tr>
-                        <th class="p-3 border">Name</th>
-                        <th class="p-3 border">Email</th>
-                        <th class="p-3 border">Subject</th>
-                        <th class="p-3 border">Message</th>
-                        <th class="p-3 border">Received At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($msg = $messages->fetch_assoc()): ?>
-                        <tr class="hover:bg-gray-100">
-                            <td class="p-3 border"><?= htmlspecialchars($msg['name']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($msg['email']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($msg['subject']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($msg['message']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($msg['created_at']) ?></td>
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Contact Messages</h3>
+            
+            <div class="table-container">
+                <table class="w-full">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="p-4 text-left">Name</th>
+                            <th class="p-4 text-left">Email</th>
+                            <th class="p-4 text-left">Subject</th>
+                            <th class="p-4 text-left">Message</th>
+                            <th class="p-4 text-left">Received At</th>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php while ($msg = $messages->fetch_assoc()): ?>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="p-4 font-medium"><?= htmlspecialchars($msg['name']) ?></td>
+                            <td class="p-4"><?= htmlspecialchars($msg['email']) ?></td>
+                            <td class="p-4"><?= htmlspecialchars($msg['subject']) ?></td>
+                            <td class="p-4"><?= htmlspecialchars(substr($msg['message'], 0, 50)) ?>...</td>
+                            <td class="p-4"><?= htmlspecialchars($msg['created_at']) ?></td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Paintings Table -->
-        <h3 class="mt-6 text-xl font-semibold">Paintings</h3>
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-gray-300 shadow-md">
-                <thead class="bg-blue-500 text-white">
-                    <tr>
-                        <th class="p-3 border">ID</th>
-                        <th class="p-3 border">Title</th>
-                        <th class="p-3 border">Image</th>
-                        <th class="p-3 border">Year</th>
-                        <th class="p-3 border">Cost</th>
-                        <th class="p-3 border">Status</th>
-                        <th class="p-3 border">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($painting = $paintings->fetch_assoc()): ?>
-                        <tr class="hover:bg-gray-100">
-                            <td class="p-3 border"><?= htmlspecialchars($painting['id']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($painting['painting_title']) ?></td>
-                            <td class="p-3 border">
-                                <img src="../<?= htmlspecialchars($painting['painting_image']) ?>" width="100" class="rounded-lg shadow">
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-800">Paintings Collection</h3>
+                
+            </div>
+            
+            <div class="table-container">
+                <table class="w-full">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="p-4 text-left">ID</th>
+                            <th class="p-4 text-left">Title</th>
+                            <th class="p-4 text-left">Image</th>
+                            <th class="p-4 text-left">Year</th>
+                            <th class="p-4 text-left">Cost</th>
+                            <th class="p-4 text-left">Status</th>
+                            <th class="p-4 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($painting = $paintings->fetch_assoc()): ?>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="p-4"><?= htmlspecialchars($painting['id']) ?></td>
+                            <td class="p-4 font-medium"><?= htmlspecialchars($painting['painting_title']) ?></td>
+                            <td class="p-4">
+                                <img src="../<?= htmlspecialchars($painting['painting_image']) ?>" 
+                                     class="w-16 h-16 object-cover rounded-lg shadow">
                             </td>
-                            <td class="p-3 border"><?= htmlspecialchars($painting['painting_year']) ?></td>
-                            <td class="p-3 border">$<?= number_format(htmlspecialchars($painting['painting_cost']), 2) ?></td>
-                            <td class="p-3 border">
-                                <span class="<?= 
-                                    $painting['status'] === 'Active' ? 'bg-green-100 text-green-800' : 
-                                    ($painting['status'] === 'Sold' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') 
-                                ?> px-2 py-1 rounded-full text-xs">
+                            <td class="p-4"><?= htmlspecialchars($painting['painting_year']) ?></td>
+                            <td class="p-4">$<?= number_format(htmlspecialchars($painting['painting_cost']), 2) ?></td>
+                            <td class="p-4">
+                                <span class="px-3 py-1 rounded-full text-xs 
+                                    <?= 
+                                        $painting['status'] === 'Active' ? 'status-active' : 
+                                        ($painting['status'] === 'Sold' ? 'status-sold' : 'status-pending') 
+                                    ?>">
                                     <?= htmlspecialchars($painting['status']) ?>
                                 </span>
                             </td>
-                            <td class="p-3 border">
-                                <a class="text-red-600 hover:underline" href="?delete_painting=<?= $painting['id'] ?>" onclick="return confirm('Are you sure you want to delete this painting?')">Delete</a>
+                            <td class="p-4">
+                                <a href="?delete_painting=<?= $painting['id'] ?>" 
+                                   onclick="return confirm('Are you sure you want to delete this painting?')"
+                                   class="text-red-500 action-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Sculptures Table -->
-        <h3 class="mt-6 text-xl font-semibold">Sculptures</h3>
-        <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-gray-300 shadow-md">
-                <thead class="bg-blue-500 text-white">
-                    <tr>
-                        <th class="p-3 border">ID</th>
-                        <th class="p-3 border">Title</th>
-                        <th class="p-3 border">Image</th>
-                        <th class="p-3 border">Year</th>
-                        <th class="p-3 border">Cost</th>
-                        <th class="p-3 border">Status</th>
-                        <th class="p-3 border">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($sculpture = $sculptures->fetch_assoc()): ?>
-                        <tr class="hover:bg-gray-100">
-                            <td class="p-3 border"><?= htmlspecialchars($sculpture['id']) ?></td>
-                            <td class="p-3 border"><?= htmlspecialchars($sculpture['title']) ?></td>
-                            <td class="p-3 border">
-                            <img src="../<?= htmlspecialchars($sculpture['image_url']) ?>" width="100" class="rounded-lg shadow">
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-800">Sculptures Collection</h3>
+                
+            </div>
+            
+            <div class="table-container">
+                <table class="w-full">
+                    <thead class="table-header">
+                        <tr>
+                            <th class="p-4 text-left">ID</th>
+                            <th class="p-4 text-left">Title</th>
+                            <th class="p-4 text-left">Image</th>
+                            <th class="p-4 text-left">Year</th>
+                            <th class="p-4 text-left">Cost</th>
+                            <th class="p-4 text-left">Status</th>
+                            <th class="p-4 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($sculpture = $sculptures->fetch_assoc()): ?>
+                        <tr class="border-b border-gray-100 hover:bg-gray-50">
+                            <td class="p-4"><?= htmlspecialchars($sculpture['id']) ?></td>
+                            <td class="p-4 font-medium"><?= htmlspecialchars($sculpture['title']) ?></td>
+                            <td class="p-4">
+                                <img src="../<?= htmlspecialchars($sculpture['image_url']) ?>" 
+                                     class="w-16 h-16 object-cover rounded-lg shadow">
                             </td>
-                            <td class="p-3 border"><?= htmlspecialchars($sculpture['sculpture_year']) ?></td>
-                            <td class="p-3 border">$<?= number_format(htmlspecialchars($sculpture['sculpture_cost']), 2) ?></td>
-                            <td class="p-3 border">
-                                <span class="<?= 
-                                    $sculpture['status'] === 'Active' ? 'bg-green-100 text-green-800' : 
-                                    ($sculpture['status'] === 'Sold' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') 
-                                ?> px-2 py-1 rounded-full text-xs">
+                            <td class="p-4"><?= htmlspecialchars($sculpture['sculpture_year']) ?></td>
+                            <td class="p-4">$<?= number_format(htmlspecialchars($sculpture['sculpture_cost']), 2) ?></td>
+                            <td class="p-4">
+                                <span class="px-3 py-1 rounded-full text-xs 
+                                    <?= 
+                                        $sculpture['status'] === 'Active' ? 'status-active' : 
+                                        ($sculpture['status'] === 'Sold' ? 'status-sold' : 'status-pending') 
+                                    ?>">
                                     <?= htmlspecialchars($sculpture['status']) ?>
                                 </span>
                             </td>
-                            <td class="p-3 border">
-                                <a class="text-red-600 hover:underline" href="?delete_sculpture=<?= $sculpture['id'] ?>" onclick="return confirm('Are you sure you want to delete this sculpture?')">Delete</a>
+                            <td class="p-4">
+                                <a href="?delete_sculpture=<?= $sculpture['id'] ?>" 
+                                   onclick="return confirm('Are you sure you want to delete this sculpture?')"
+                                   class="text-red-500 action-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    <script>
-        // File name display for upload form
-        document.getElementById("painting_file")?.addEventListener("change", function() {
-            document.getElementById("file-name").innerText = this.files[0].name;
-        });
-    </script>
 </body>
 </html>
