@@ -240,7 +240,7 @@ $conn->close();
             <div class="flex justify-between items-center mb-10">
                 <h2 class="text-3xl font-bold text-gray-800 section-title">Featured Paintings</h2>
                 <a href="paintings.php" class="text-indigo-700 font-medium hover:text-indigo-900 flex items-center">
-                    View All <i class="fas fa-arrow-right ml-2"></i>
+                
                 </a>
             </div>
             
@@ -275,7 +275,7 @@ $conn->close();
             <div class="flex justify-between items-center mb-10">
                 <h2 class="text-3xl font-bold text-gray-800 section-title">Featured Sculptures</h2>
                 <a href="sculptures.php" class="text-indigo-700 font-medium hover:text-indigo-900 flex items-center">
-                    View All <i class="fas fa-arrow-right ml-2"></i>
+                   
                 </a>
             </div>
             
