@@ -47,10 +47,25 @@ $sculpturesResult = $sculpturesStmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Bids</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1579547945413-497e1b99dac0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        .content-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+        }
+        .table-row:hover {
+            background-color: rgba(249, 250, 251, 0.8);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-6">
-
-    <div class="max-w-5xl mx-auto bg-white p-6 shadow-lg rounded-lg">
+<body class="min-h-screen p-6">
+    <div class="max-w-5xl mx-auto content-container p-6 shadow-lg rounded-lg">
         <a href="user_dashboard.php" class="inline-flex items-center px-4 py-2 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
             ⬅ Back
         </a>
@@ -76,7 +91,7 @@ $sculpturesResult = $sculpturesStmt->get_result();
                     </thead>
                     <tbody>
                         <?php while ($row = $paintingsResult->fetch_assoc()): ?>
-                        <tr class="bg-white hover:bg-gray-100">
+                        <tr class="bg-white table-row">
                             <td class="border p-2"><?php echo htmlspecialchars($row['artwork_name']); ?></td>
                             <td class="border p-2">
                                 <img src="../<?php echo htmlspecialchars($row['artwork_image']); ?>" alt="Painting" class="w-16 h-16 object-cover rounded-md">
@@ -123,7 +138,7 @@ $sculpturesResult = $sculpturesStmt->get_result();
                     </thead>
                     <tbody>
                         <?php while ($row = $sculpturesResult->fetch_assoc()): ?>
-                        <tr class="bg-white hover:bg-gray-100">
+                        <tr class="bg-white table-row">
                             <td class="border p-2"><?php echo htmlspecialchars($row['artwork_name']); ?></td>
                             <td class="border p-2">
                                 <img src="../<?php echo htmlspecialchars($row['artwork_image']); ?>" alt="Sculpture" class="w-16 h-16 object-cover rounded-md">
@@ -155,6 +170,5 @@ $sculpturesResult = $sculpturesStmt->get_result();
         </div>
         <?php endif; ?>
     </div>
-
 </body>
 </html>
