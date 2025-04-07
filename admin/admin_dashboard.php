@@ -155,22 +155,9 @@ $conn->close();
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 Dashboard
             </a>
-            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
-                <i class="fas fa-users mr-3"></i>
-                Users
-            </a>
-            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
-                <i class="fas fa-envelope mr-3"></i>
-                Messages
-            </a>
-            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
-                <i class="fas fa-paint-brush mr-3"></i>
-                Paintings
-            </a>
-            <a href="#" class="sidebar-item flex items-center p-3 rounded-lg mb-2">
-                <i class="fas fa-monument mr-3"></i>
-                Sculptures
-            </a>
+          
+         
+       
         </div>
         
         <div class="mt-auto">

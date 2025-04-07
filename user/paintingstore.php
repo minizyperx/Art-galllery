@@ -198,7 +198,7 @@ if (!empty($paintings)) {
             </div>
             <nav>
                 <ul class="flex space-x-6">
-                    <li><a href="../index.php" class="hover:text-indigo-200 flex items-center">
+                    <li><a href="user_dashboard.php" class="hover:text-indigo-200 flex items-center">
                         <i class="fas fa-home mr-1"></i> Home</a></li>
                     <li><a href="#" class="hover:text-indigo-200 flex items-center">
                     

@@ -42,11 +42,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_bid'])) {
             $_SESSION['error'] = 'Your bid must be higher than the current highest bid of Rs.' . $currentHighestBid;
         } else {
             // Insert bid into the database
-            $sql = "INSERT INTO bids (bid_amount, s_id, u_id, start_date, end_date) VALUES (?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY))";
+            $sql = "INSERT INTO bids (bid_amount, s_id, u_id, start_date, end_date, highest_bid) VALUES (?, ?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY), ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param('dii', $bidAmount, $sculptureId, $userId);
+            
+            // Set the new highest bid value
+            $newHighestBid = $bidAmount;
+            $stmt->bind_param('diii', $bidAmount, $sculptureId, $userId, $newHighestBid);
 
             if ($stmt->execute()) {
+                // Update all bids for this sculpture to reflect the new highest bid
+                $updateSql = "UPDATE bids SET highest_bid = ? WHERE s_id = ?";
+                $updateStmt = $conn->prepare($updateSql);
+                $updateStmt->bind_param('di', $newHighestBid, $sculptureId);
+                $updateStmt->execute();
+                $updateStmt->close();
+                
                 $_SESSION['success'] = 'Bid placed successfully!';
             } else {
                 $_SESSION['error'] = 'Failed to place bid. Please try again.';
@@ -70,6 +80,7 @@ if ($result->num_rows > 0) {
     $sculptures = $result->fetch_all(MYSQLI_ASSOC);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,11 +137,10 @@ if ($result->num_rows > 0) {
     <!-- Header -->
     <header class="bg-indigo-700 text-white shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center  space-x-2">
-            <a href="user_dashboard.php" class="inline-flex items-center px-4 py-2 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
-    ⬅ Back
-</a>
-
+            <div class="flex items-center space-x-2">
+                <a href="user_dashboard.php" class="inline-flex items-center px-4 py-2 mb-4 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                    ⬅ Back
+                </a>
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-monument text-2xl"></i>
                     <h1 class="text-xl font-bold">Sculpture Gallery</h1>
@@ -138,10 +148,8 @@ if ($result->num_rows > 0) {
             </div>
             <nav>
                 <ul class="flex space-x-6">
-                    <li><a href="index.php" class="hover:text-indigo-200 flex items-center">
+                    <li><a href="user_dashboard.php" class="hover:text-indigo-200 flex items-center">
                         <i class="fas fa-home mr-1"></i> Home</a></li>
-                    <li><a href="#" class="hover:text-indigo-200 flex items-center">
-                       
                     <li><a href="logout.php" class="hover:text-indigo-200 flex items-center">
                         <i class="fas fa-sign-out-alt mr-1"></i> Logout</a></li>
                 </ul>

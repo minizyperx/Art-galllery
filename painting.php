@@ -270,10 +270,10 @@ $conn->close();
     </style>
 </head>
 <body>
-    <button onclick="window.history.back()" class="right-back-button">
+    <a href="seller/seller_dashboard.php" class="right-back-button">
         <i class="fas fa-arrow-left"></i>
         Back
-    </button>
+    </a>
 
     <div class="container">
         <h1>Upload Painting</h1>
@@ -302,7 +302,7 @@ $conn->close();
             <label for="painting_year">Year of Painting:</label>
             <input type="number" id="painting_year" name="painting_year" min="1800" max="2100" value="<?php echo isset($painting_year) ? htmlspecialchars($painting_year) : ''; ?>" required>
 
-            <label for="painting_cost">Cost of Painting ($):</label>
+            <label for="painting_cost">Cost of Painting (Rs):</label>
             <input type="number" id="painting_cost" name="painting_cost" step="0.01" min="0.01" value="<?php echo isset($painting_cost) ? htmlspecialchars($painting_cost) : ''; ?>" required>
 
             <label for="end_date">Bidding End Date:</label>

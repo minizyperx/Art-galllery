@@ -252,7 +252,7 @@ $conn->close();
                                 <img src="<?php echo htmlspecialchars($painting['painting_image']); ?>" 
                                      alt="<?php echo htmlspecialchars($painting['painting_title']); ?>" 
                                      class="art-card-img">
-                                <span class="price-tag">$<?php echo number_format($painting['painting_cost'], 2); ?></span>
+                                <span class="price-tag">Rs: <?php echo number_format($painting['painting_cost'], 2); ?></span>
                             </div>
                             <div class="p-5">
                                 <h3 class="text-xl font-semibold mb-1"><?php echo htmlspecialchars($painting['painting_title']); ?></h3>
@@ -287,7 +287,7 @@ $conn->close();
                                 <img src="uploads/sculptures/<?php echo htmlspecialchars(basename($sculpture['image_url'])); ?>" 
                                      alt="<?php echo htmlspecialchars($sculpture['title']); ?>" 
                                      class="art-card-img">
-                                <span class="price-tag">$<?php echo number_format($sculpture['sculpture_cost'], 2); ?></span>
+                                <span class="price-tag">Rs: <?php echo number_format($sculpture['sculpture_cost'], 2); ?></span>
                             </div>
                             <div class="p-5">
                                 <h3 class="text-xl font-semibold mb-1"><?php echo htmlspecialchars($sculpture['title']); ?></h3>
@@ -335,8 +335,7 @@ $conn->close();
                     <ul class="space-y-2">
                         <li><a href="index.php" class="text-gray-400 hover:text-white transition">Home</a></li>
                         <li><a href="about.html" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                        <li><a href="paintings.php" class="text-gray-400 hover:text-white transition">Paintings</a></li>
-                        <li><a href="sculptures.php" class="text-gray-400 hover:text-white transition">Sculptures</a></li>
+                        
                     </ul>
                 </div>
                 <div>

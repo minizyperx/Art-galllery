@@ -104,7 +104,7 @@ $sculptures = $result2->num_rows > 0 ? $result2->fetch_all(MYSQLI_ASSOC) : [];
                             <div class="p-4">
                                 <h3 class="text-xl font-semibold mb-2"><?php echo htmlspecialchars($painting['painting_title']); ?></h3>
                                 <p class="text-gray-600">Year: <?php echo htmlspecialchars($painting['painting_year']); ?></p>
-                                <p class="text-gray-600">Cost: $<?php echo htmlspecialchars($painting['painting_cost']); ?></p>
+                                <p class="text-gray-600">Cost:Rs <?php echo htmlspecialchars($painting['painting_cost']); ?></p>
                                 <p class="text-gray-600">Status: <span class="font-semibold"><?php echo htmlspecialchars($painting['status']); ?></span></p>
                             </div>
                         </div>
@@ -131,7 +131,7 @@ $sculptures = $result2->num_rows > 0 ? $result2->fetch_all(MYSQLI_ASSOC) : [];
                             <div class="p-4">
                                 <h3 class="text-xl font-semibold mb-2"><?php echo htmlspecialchars($sculpture['title']); ?></h3>
                                 <p class="text-gray-600">Year: <?php echo htmlspecialchars($sculpture['sculpture_year']); ?></p>
-                                <p class="text-gray-600">Cost: $<?php echo htmlspecialchars($sculpture['sculpture_cost']); ?></p>
+                                <p class="text-gray-600">Cost:Rs <?php echo htmlspecialchars($sculpture['sculpture_cost']); ?></p>
                                 <p class="text-gray-600">Status: <span class="font-semibold"><?php echo htmlspecialchars($sculpture['status']); ?></span></p>
                             </div>
                         </div>

@@ -220,7 +220,7 @@ $conn->close();
 </head>
 <body>
     <!-- Right-most back button -->
-    <a href="javascript:history.back()" class="right-back-button">
+    <a href="seller/seller_dashboard.php" class="right-back-button">
         <i class="fas fa-arrow-left"></i>
         Back
     </a>
