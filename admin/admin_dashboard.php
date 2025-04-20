@@ -328,7 +328,7 @@ $conn->close();
                                      class="w-16 h-16 object-cover rounded-lg shadow">
                             </td>
                             <td class="p-4"><?= htmlspecialchars($painting['painting_year']) ?></td>
-                            <td class="p-4">$<?= number_format(htmlspecialchars($painting['painting_cost']), 2) ?></td>
+                            <td class="p-4">Rs<?= number_format(htmlspecialchars($painting['painting_cost']), 2) ?></td>
                             <td class="p-4">
                                 <span class="px-3 py-1 rounded-full text-xs 
                                     <?= 
@@ -382,7 +382,7 @@ $conn->close();
                                      class="w-16 h-16 object-cover rounded-lg shadow">
                             </td>
                             <td class="p-4"><?= htmlspecialchars($sculpture['sculpture_year']) ?></td>
-                            <td class="p-4">$<?= number_format(htmlspecialchars($sculpture['sculpture_cost']), 2) ?></td>
+                            <td class="p-4">Rs<?= number_format(htmlspecialchars($sculpture['sculpture_cost']), 2) ?></td>
                             <td class="p-4">
                                 <span class="px-3 py-1 rounded-full text-xs 
                                     <?= 
