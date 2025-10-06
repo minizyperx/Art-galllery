@@ -37,6 +37,6 @@ class Database {
 $db = new Database();
 $conn = $db->conn;  // Access the connection for queries
  if ($db) {
-            echo("Connection success: " );
+            ("Connection success: " );
         }
 ?>

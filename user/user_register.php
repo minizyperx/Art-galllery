@@ -1,65 +1,107 @@
 <?php
 session_start();
-include __DIR__ . '/../db/connect.php'; // Ensure correct database connection
 
+class Database {
+    private $host = "localhost";
+    private $username = "root";
+    private $password = "";
+    private $dbname = "art_gallery";
+    public $conn;
+
+    public function __construct() {
+        $this->connect();
+    }
+
+    private function connect() {
+        $this->conn = new mysqli($this->host, $this->username, $this->password, $this->dbname);
+        if ($this->conn->connect_error) {
+            die("Database connection failed: " . $this->conn->connect_error);
+        }
+    }
+}
+
+class User {
+    private $conn;
+    private $table = "users";
+
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+
+    public function register($username, $email, $phone, $address, $password, $confirm_password) {
+        // Trim and sanitize input
+        $username = trim($username);
+        $email = trim($email);
+        $phone = trim($phone);
+        $address = trim($address);
+        $password = trim($password);
+        $confirm_password = trim($confirm_password);
+
+        // Validation
+        if (empty($username) || empty($email) || empty($phone) || empty($address) || empty($password) || empty($confirm_password)) {
+            $this->redirectWithAlert("All fields are required!", "user_register.php");
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->redirectWithAlert("Invalid email format!", "user_register.php");
+        }
+
+        if (!preg_match("/^\d{10}$/", $phone)) {
+            $this->redirectWithAlert("Phone number must be 10 digits!", "user_register.php");
+        }
+
+        if ($password !== $confirm_password) {
+            $this->redirectWithAlert("Passwords do not match!", "user_register.php");
+        }
+
+        // Check if username or email already exists
+        $check_query = "SELECT id FROM {$this->table} WHERE username = ? OR email = ?";
+        $stmt = $this->conn->prepare($check_query);
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $this->redirectWithAlert("Username or Email already exists!", "user_register.php");
+        }
+        $stmt->close();
+
+        // Hash password
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+        // Insert user
+        $insert_query = "INSERT INTO {$this->table} (username, email, phone, address, password) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->conn->prepare($insert_query);
+        $stmt->bind_param("sssss", $username, $email, $phone, $address, $hashed_password);
+
+        if ($stmt->execute()) {
+            $this->redirectWithAlert("Registration successful! Please log in.", "userlogin.php");
+        } else {
+            $this->redirectWithAlert("Something went wrong. Please try again later.", "user_register.php");
+        }
+
+        $stmt->close();
+    }
+
+    private function redirectWithAlert($message, $location) {
+        echo "<script>alert('$message'); window.location.href='$location';</script>";
+        exit();
+    }
+}
+
+// Main execution
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $phone = trim($_POST['phone']);
-    $address = trim($_POST['address']);
-    $password = trim($_POST['password']);
-    $confirm_password = trim($_POST['confirm_password']);
+    $database = new Database();
+    $user = new User($database->conn);
 
-    // Server-side validation
-    if (empty($username) || empty($email) || empty($phone) || empty($address) || empty($password) || empty($confirm_password)) {
-        echo "<script>alert('All fields are required!'); window.location.href='user_register.php';</script>";
-        exit();
-    }
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('Invalid email format!'); window.location.href='user_register.php';</script>";
-        exit();
-    }
-
-    if (!preg_match("/^\d{10}$/", $phone)) {
-        echo "<script>alert('Phone number must be 10 digits!'); window.location.href='user_register.php';</script>";
-        exit();
-    }
-
-    if ($password !== $confirm_password) {
-        echo "<script>alert('Passwords do not match!'); window.location.href='user_register.php';</script>";
-        exit();
-    }
-
-    // Hash password
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-    // Check if username or email already exists
-    $check_query = "SELECT id FROM users WHERE username = ? OR email = ?";
-    $stmt = $conn->prepare($check_query);
-    $stmt->bind_param("ss", $username, $email);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        echo "<script>alert('Username or Email already exists!'); window.location.href='user_register.php';</script>";
-        exit();
-    }
-    $stmt->close();
-
-    // Insert user into the database
-    $query = "INSERT INTO users (username, email, phone, address, password) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("sssss", $username, $email, $phone, $address, $hashed_password);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Registration successful! Please log in.'); window.location.href='userlogin.php';</script>";
-    } else {
-        echo "<script>alert('Something went wrong. Please try again later.'); window.location.href='user_register.php';</script>";
-    }
-
-    $stmt->close();
-    $conn->close();
+    $user->register(
+        $_POST['username'],
+        $_POST['email'],
+        $_POST['phone'],
+        $_POST['address'],
+        $_POST['password'],
+        $_POST['confirm_password']
+    );
 }
 ?>
 

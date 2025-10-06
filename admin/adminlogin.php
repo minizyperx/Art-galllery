@@ -1,69 +1,81 @@
 <?php
 session_start();
 
-// Database Connection
-$servername = "localhost"; // Change if needed
-$username = "root"; // Database username
-$password = ""; // Database password
-$dbname = "art_gallery"; // Database name
+class Database {
+    private $servername = "localhost";
+    private $username = "root";
+    private $password = "";
+    private $dbname = "art_gallery";
+    public $conn;
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Handle Login Form Submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = strtolower(trim($_POST['email'])); // Trim & convert email to lowercase
-    $password = trim($_POST['password']);
-
-    if (empty($email) || empty($password)) {
-        echo "<script>alert('Both fields are required!'); window.location.href='adminlogin.php';</script>";
-        exit();
+    public function __construct() {
+        $this->connectDB();
     }
 
-    // Fetch admin details
-    $query = "SELECT id, name, password FROM admin WHERE email = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        $stmt->bind_result($admin_id, $name, $hashed_password);
-        $stmt->fetch();
-
-        // Debugging Outputs
-        var_dump("Email Entered: ", $email);
-        var_dump("Password Entered: ", $password);
-        var_dump("Fetched Hashed Password: ", $hashed_password);
-
-        // Check if password_verify works
-        if (password_verify($password, $hashed_password)) {
-            $_SESSION['admin_id'] = $admin_id;
-            $_SESSION['admin_name'] = $name;
-
-            echo "<script>alert('Login successful!'); window.location.href='admin_dashboard.php';</script>";
-            exit();
-        } else {
-            var_dump("Password verification failed.");
-            echo "<script>alert('Invalid email or password!'); window.location.href='adminlogin.php';</script>";
-            exit();
+    private function connectDB() {
+        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        if ($this->conn->connect_error) {
+            die("Database Connection failed: " . $this->conn->connect_error);
         }
-    } else {
-        var_dump("Admin not found.");
-        echo "<script>alert('Admin not found!'); window.location.href='adminlogin.php';</script>";
-        exit();
     }
-
-    $stmt->close();
 }
 
-$conn->close();
-?>
+class Admin {
+    private $conn;
+    private $table = "admin";
 
+    public function __construct($db) {
+        $this->conn = $db;
+    }
+
+    public function login($email, $password) {
+        $email = strtolower(trim($email));
+        $password = trim($password);
+
+        if (empty($email) || empty($password)) {
+            $this->redirectWithAlert("Both fields are required!", "adminlogin.php");
+        }
+
+        $query = "SELECT id, name, password FROM {$this->table} WHERE email = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($admin_id, $name, $hashed_password);
+            $stmt->fetch();
+
+            // Debugging (you can remove later)
+            // var_dump("Email: ", $email, " Password: ", $password, " Hashed: ", $hashed_password);
+
+            if (password_verify($password, $hashed_password)) {
+                $_SESSION['admin_id'] = $admin_id;
+                $_SESSION['admin_name'] = $name;
+                $this->redirectWithAlert("Login successful!", "admin_dashboard.php");
+            } else {
+                $this->redirectWithAlert("Invalid email or password!", "adminlogin.php");
+            }
+        } else {
+            $this->redirectWithAlert("Admin not found!", "adminlogin.php");
+        }
+
+        $stmt->close();
+    }
+
+    private function redirectWithAlert($message, $location) {
+        echo "<script>alert('$message'); window.location.href='$location';</script>";
+        exit();
+    }
+}
+
+// Main Execution
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $database = new Database();
+    $admin = new Admin($database->conn);
+    $admin->login($_POST['email'], $_POST['password']);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -96,9 +108,7 @@ $conn->close();
 <body class="flex items-center justify-center min-h-screen bg-cover bg-center" style="background-image: url('../adminlogin.jpeg');">
 
     <div class="login-container bg-white p-10 shadow-xl rounded-lg w-full max-w-md relative">
-        <!-- Home Button -->
         <a href="../index.php" class="home-button">Home</a>
-
         <h1 class="text-3xl font-bold text-center text-pink-600 mb-6">Admin Login</h1>
 
         <form action="" method="post" class="space-y-4">
