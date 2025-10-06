@@ -1,14 +1,42 @@
 <?php
-$servername = "localhost";  // XAMPP default
-$username = "root";  // Default username for XAMPP
-$password = "";  // No password by default
-$database = "art_gallery";  // Ensure this is your correct database name
+class Database {
+    private $servername = "localhost";
+    private $username = "root";
+    private $password = "";
+    private $database = "art_gallery";
+    public $conn;
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
+    // Constructor to initialize the connection
+    public function __construct() {
+        $this->connect();
+    }
 
-// Check connection
-if ($conn->connect_error) {  
-    die("Connection failed: " . $conn->connect_error);
+    // Method to create the connection
+    private function connect() {
+        $this->conn = new mysqli(
+            $this->servername, 
+            $this->username, 
+            $this->password, 
+            $this->database
+        );
+
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
+
+    // Optional: method to close connection
+    public function close() {
+        if ($this->conn) {
+            $this->conn->close();
+        }
+    }
 }
+
+// Usage
+$db = new Database();
+$conn = $db->conn;  // Access the connection for queries
+ if ($db) {
+            echo("Connection success: " );
+        }
 ?>
